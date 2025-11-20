@@ -1,0 +1,6 @@
+from buscar_cep import buscarcep
+bc = buscarcep()
+
+escrevacoisa = str(input("Digite o cep que deseja buscar: "))
+resposta = bc.buscar(escrevacoisa)
+print(resposta)
