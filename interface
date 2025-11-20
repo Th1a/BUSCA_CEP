@@ -1,0 +1,93 @@
+import tkinter
+from buscar_cep import buscarcep
+
+janela = tkinter.Tk()
+janela.title("Exemplo de Janela")
+janela.geometry("400x350")
+
+
+borda_introdução = tkinter.LabelFrame(
+janela,
+padx=10,
+pady=10,
+
+)
+borda_introdução.pack(padx=10,fill='x', pady=10)
+
+label = tkinter.Label(
+borda_introdução, 
+text="Busque CEP!", 
+font=("Arial", 14)
+
+)
+label.pack(padx=10,fill='x',pady=10)
+
+lugar_da_pesquisa = tkinter.LabelFrame(
+janela,
+padx=10,
+pady=10,
+text="Digite seu CEP"
+)
+lugar_da_pesquisa.pack(padx=10, fill="x", pady=10)
+
+linha =  tkinter.Label(lugar_da_pesquisa)
+linha.pack()
+
+
+entrada = tkinter.Entry(linha, width=25)
+entrada.pack(side="left", padx=5)
+
+
+botao_enviar = tkinter.Button(linha, text="Enviar")
+botao_enviar.pack(side="left", padx=5)
+
+
+botao_apagar = tkinter.Button(linha, text="Apagar")
+botao_apagar.pack(side="left", padx=5)
+
+exibir_resultado = tkinter.LabelFrame(
+janela,
+padx=10,
+pady=10,
+text="Resultado"
+)
+exibir_resultado.pack(padx=10, fill="x", pady=10)  
+
+
+resultado = tkinter.Label(exibir_resultado, text="CEP")
+resultado.pack(pady=10)
+
+
+def gettext():
+    texto = entrada.get()
+    resultado.config(text=f"Você digitou: {texto}")
+
+
+def deltext():
+    entrada.delete(0, tkinter.END)
+    resultado.config(text="")
+
+def buscar_cep():
+    try:
+        cep = entrada.get()
+        bc = buscarcep()
+        resposta = bc.buscar(cep)
+        if "erro" in resposta:
+            resultado.config(text="CEP inválido")
+        elif resposta == None:
+            resultado.config(text="Nenhum dado encontrado")
+        else:
+            texto = (f" Rua: {resposta['rua']} {"|"}"
+                    f" Bairro: {resposta['bairro']} {"|"}"
+                    f" Cidade: {resposta['cidade']} {"|"}"
+                    f" UF: {resposta['uf']}")
+            resultado.config(text=texto)
+    except Exception as e:
+        resultado.config(text=f"Erro na requisição: {e}")
+
+
+
+botao_enviar.config(command=buscar_cep)
+botao_apagar.config(command=deltext)
+
+janela.mainloop()
